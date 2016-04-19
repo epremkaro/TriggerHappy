@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class JavaStack {
-	
+	//
 	private Stack st = new Stack();
 	public final String[] openPar = {"{", "(", "["};
 	public final String[] closePar = {"}", ")", "]"};
