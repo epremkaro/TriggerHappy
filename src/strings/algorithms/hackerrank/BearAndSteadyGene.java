@@ -10,7 +10,12 @@ public class BearAndSteadyGene {
 	public static void main(String[] args) {
 		
 		FastReader fr = new FastReader();
-		System.out.println(fr.nextInt());
+		
+		int n = fr.nextInt();
+		String s = fr.nextLine();
+		
+		System.out.println(n);
+		System.out.println(s);
 
 	}
 	

@@ -4,9 +4,11 @@ import java.util.Scanner;
 
 public class Java1DArrayP2 {
 
-	public static void main(String[] args) {
+	private static Scanner sc;
+
+  public static void main(String[] args) {
 		
-		Scanner sc = new Scanner(System.in);
+		sc = new Scanner(System.in);
 		int T = sc.nextInt();
 		
 		for (int i = 0; i < T; i++){
