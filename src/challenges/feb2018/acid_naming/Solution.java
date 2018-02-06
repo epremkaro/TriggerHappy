@@ -10,8 +10,17 @@ public class Solution {
 
     static String acidNaming(String acid_name) {
         // Complete this function
+      Map<Integer, String> results = new HashMap<>();
+      results.put(1, "non-metal acid");
+      results.put(2, "polyatomic acid");
+      results.put(3, "not an acid");
       
-      return "";
+      if (acid_name.startsWith("hydro") && acid_name.endsWith("ic")) {
+          return results.get(1);
+      }else if (acid_name.endsWith("ic")) {
+        return results.get(2);
+      }else
+        return results.get(3);
     }
 
     public static void main(String[] args) {
