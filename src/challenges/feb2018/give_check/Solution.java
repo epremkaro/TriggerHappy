@@ -45,17 +45,20 @@ public class Solution {
   }
 
   static boolean isQueen(int row, int col) {
-    int[][] ddd = new int[][] { { 1, -1 }, { 1, 1 } };
+    int[][] ddd = new int[][] { { 0, -1 }, { 1, -1 }, {1, 0}, {1, 1}, {0, 1}};
     for (int[] d : ddd) {
       int i = row + d[0], j = col + d[1];
       while (isOnBoard(i, j)) {
+        if (b[i][j] == '#') {
+          i += d[0];
+          j += d[1];
+          continue;
+        }
         if (isKing(i, j)) {
           return true;
-        }else if ((i != row && j != col) && b[i][j] != '#') {
+        }else {
           break;
         }
-        i += d[0];
-        j += d[1];
       }
     }
     return false;
@@ -66,30 +69,36 @@ public class Solution {
     for (int[] d : ddd) {
       int i = row + d[0], j = col + d[1];
       while (isOnBoard(i, j)) {
+        if (b[i][j] == '#') {
+          i += d[0];
+          j += d[1];
+          continue;
+        }
         if (isKing(i, j)) {
           return true;
-        }else if ((i != row && j != col) && b[i][j] != '#') {
+        }else {
           break;
         }
-        i += d[0];
-        j += d[1];
       }
     }
     return false;
   }
 
   static boolean isBishop(int row, int col) {
-    int[][] ddd = new int[][] { { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
+    int[][] ddd = new int[][] { { 1, -1 }, { 1, 1 } };
     for (int[] d : ddd) {
       int i = row + d[0], j = col + d[1];
       while (isOnBoard(i, j)) {
+        if (b[i][j] == '#') {
+          i += d[0];
+          j += d[1];
+          continue;
+        }
         if (isKing(i, j)) {
           return true;
-        }else if ((i != row && j != col) && b[i][j] != '#') {
+        }else {
           break;
         }
-        i += d[0];
-        j += d[1];
       }
     }
     return false;
@@ -128,7 +137,7 @@ public class Solution {
         if (cellRank == 'Q' || cellRank == 'R') {
           boolean isCleanBetween = true;
           for (int j = king[1] + 1; j < i; j++) {
-            if (b[6][j] != '#') {
+            if (b[1][j] != '#') {
               isCleanBetween = false;
               break;
             }
@@ -146,7 +155,7 @@ public class Solution {
         if (cellRank == 'Q' || cellRank == 'R') {
           boolean isCleanBetween = true;
           for (int j = king[1] - 1; j > i; j--) {
-            if (b[6][j] != '#') {
+            if (b[1][j] != '#') {
               isCleanBetween = false;
               break;
             }
@@ -157,6 +166,19 @@ public class Solution {
         }
       }
     }
+    /*
+    //if on the bottom on the same column
+    else if (king[0] > pawnInit[0] && king[1] == pawnInit[1]) {
+      for (int i = pawnInit[0] + 1; i < 8; i++) {
+        char cellRank = b[i][pawnInit[1]];
+        if (cellRank == '#')
+          continue;
+        if (cellRank == 'k') {
+          checkSum++;
+        }
+      }
+    }
+    */
     //if on the left bottom diagonal
     else if (king[0] > pawnInit[0] && king[1] < pawnInit[1]) {
       if (isOnBoard(0, pawnInit[1] + 1) && (b[0][pawnInit[1] + 1] == 'Q' || b[0][pawnInit[1] + 1] == 'B')) {
@@ -231,12 +253,15 @@ public class Solution {
     // if on the same row on the left side
     if (whiteKing[0] == row && whiteKing[1] < col) {
       print("1");
-      for (int i = col + 1; i < 8; i++) {
+      for (int i = whiteKing[1] + 1; i < 8; i++) {
         char cellRank = b[1][i];
+        if (i == col)
+          continue;
+        
         if (cellRank == 'q' || cellRank == 'r') {
           boolean isCleanBetween = true;
           for (int j = whiteKing[1] + 1; j < i; j++) {
-            if (b[6][j] != '#') {
+            if (j != col && b[1][j] != '#') {
               isCleanBetween = false;
               break;
             }
@@ -244,18 +269,23 @@ public class Solution {
           if (isCleanBetween) {
             checkSum++;
           }
+        }else if (cellRank != '#') {
+          break;
         }
       }
     }
     //if on the same row on the right side
     else if (whiteKing[0] == row && whiteKing[1] > col) {
       print("2");
-      for (int i = col - 1; i >= 0; i--) {
+      for (int i = whiteKing[1] - 1; i >= 0; i--) {
         char cellRank = b[1][i];
+        if (i == col)
+          continue;
+        
         if (cellRank == 'q' || cellRank == 'r') {
           boolean isCleanBetween = true;
           for (int j = whiteKing[1] - 1; j > i; j--) {
-            if (b[6][j] != '#') {
+            if (j != col && b[1][j] != '#') {
               isCleanBetween = false;
               break;
             }
@@ -263,6 +293,8 @@ public class Solution {
           if (isCleanBetween) {
             checkSum++;
           }
+        }else if (cellRank != '#') {
+          break;
         }
       }
     }
@@ -270,7 +302,7 @@ public class Solution {
     else if (whiteKing[0] > row && whiteKing[1] < col) {
       print("3");
       if (isOnBoard(0, col + 1) && (b[0][col + 1] == 'q' || b[0][col + 1] == 'b')) {
-        int i = row, j = col;
+        int i = row + 1, j = col - 1;
         while (isOnBoard(i, j)) {
           if (b[i][j] != '#') {
             if (b[i][j] == 'K') {
@@ -287,7 +319,7 @@ public class Solution {
     else if (whiteKing[0] > row && whiteKing[1] > col) {
       print("4");
       if (isOnBoard(0, col - 1) && (b[0][col - 1] == 'q' || b[0][col - 1] == 'b')) {
-        int i = row, j = col;
+        int i = row + 1, j = col + 1;
         while (isOnBoard(i, j)) {
           if (b[i][j] != '#') {
             if (b[i][j] == 'K') {
@@ -303,7 +335,7 @@ public class Solution {
     //if on the left top diagonal
     else if (whiteKing[0] == 0 && whiteKing[1] == col - 1) {
       print("5");
-      int i = row, j = col;
+      int i = row + 1, j = col + 1;
       while (isOnBoard(i, j)) {
         if (b[i][j] != '#') {
           if (b[i][j] == 'q' || b[i][j] == 'b') {
@@ -318,7 +350,7 @@ public class Solution {
     //if on the right top diagonal
     else if (whiteKing[0] == 0 && whiteKing[1] == col + 1) {
       print("6");
-      int i = row, j = col;
+      int i = row + 1, j = col - 1;
       while (isOnBoard(i, j)) {
         if (b[i][j] != '#') {
           if (b[i][j] == 'q' || b[i][j] == 'b') {
@@ -331,9 +363,12 @@ public class Solution {
       }
     }
     
+    
     if (checkSum > 0) {
-      print(">>>> 0");
+      print(">>>> pawn["+row+"]["+col+"] is not right pawn");
       return false;
+    }else {
+      print(">>>> pawn["+row+"]["+col+"] is right pawn");
     }
     
     return true;
@@ -349,6 +384,9 @@ public class Solution {
     int row = 1;
     for (int col = 0; col < 8; col++) {
       if (board[row][col] == 'P' && isRightPawn(row, col)) {
+        b[1][col] = '#';
+        b[0][col] = '$';
+        
         if (isQueen(0, col))
           res++;
 
@@ -361,10 +399,13 @@ public class Solution {
         if (isKnight(0, col))
           res++;
 
-        b[1][col] = '#';
-        b[0][col] = '$';
+        
         pawnInit = new int[] {1, col};
-        res += getKingCheckCount();
+        int vskrytyCheck = getKingCheckCount();
+        
+        if (vskrytyCheck > 0)
+          res = 4;
+//        res += vskrytyCheck * 4;
         break;
       }
     }
