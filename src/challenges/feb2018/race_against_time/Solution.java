@@ -8,7 +8,57 @@ import java.util.regex.*;
 
 public class Solution {
   
-  static long raceAgainstTime(int n, int mason_height, int[] heights, int[] prices) {
+  static long raceAgainstTime(int n, int mason_height, int[] heights, int[] prices){
+ // Complete this function
+    long res = Long.MAX_VALUE;
+    int[] dpHeight = new int[n];
+    int[] dpIndx = new int[n];
+    long[] poVals = new long[n];
+    int top = 0;
+    dpHeight[top] = mason_height;
+    dpIndx[top] = -1;
+    poVals[top] = 0;
+    
+    for (int i = 0; i < n - 1; i++) {
+        long bestBelow = Long.MAX_VALUE;
+        while (top >= 0 && dpHeight[top] < heights[i]) {
+            bestBelow = Math.min(bestBelow, poVals[top] + (i - dpIndx[top]) 
+                    + Math.abs(heights[i] - dpHeight[top]) + prices[i]);
+            top--;
+        }
+        
+        if (top == -1) {
+            //The highest person ever
+            top++;
+            dpHeight[top] = heights[i];
+            dpIndx[top] = i;
+            poVals[top] = bestBelow;
+        } else {
+            long goDownValue = poVals[top] + (i - dpIndx[top]) 
+                    + Math.abs(heights[i] - dpHeight[top]) + prices[i];
+            goDownValue = Math.min(goDownValue, bestBelow);
+            long topBetterValue = poVals[top] + (i - dpIndx[top]) 
+                    + Math.abs(heights[i] - dpHeight[top]);
+            
+            if (goDownValue < topBetterValue) {
+                if (dpHeight[top] == heights[i]) {
+                    top--;
+                }
+                top++;
+                dpHeight[top] = heights[i];
+                dpIndx[top] = i;
+                poVals[top] = goDownValue;
+            }
+        }
+    }
+    
+    for (int i = 0; i <= top; i++) {
+        res = Math.min(res, poVals[i] + ((n - 1) - dpIndx[i]));
+    }
+    return res;
+  }
+  
+  static long raceAgainstTime19(int n, int mason_height, int[] heights, int[] prices) {
     int slider = mason_height;
     long res = n;
     
