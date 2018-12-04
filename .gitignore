@@ -1,3 +1,5 @@
+*.iml
+
 /bin/
 .classpath
 .project
